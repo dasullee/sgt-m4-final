@@ -1,0 +1,19 @@
+{
+  "name": "sgt-m4-final",
+  "version": "1.0.0",
+  "description": "Final Module 4 project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dasullee/sgt-m4-final.git"
+  },
+  "author": "Nicole Lee",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dasullee/sgt-m4-final/issues"
+  },
+  "homepage": "https://github.com/dasullee/sgt-m4-final#readme"
+}
