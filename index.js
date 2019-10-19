@@ -11,6 +11,15 @@ app.get('/api/test', async (req, res) => {
         message: "Test route /api/test route working!",
         result
     })
+});
+
+app.get('/api/grades', async (req, res) => {
+    const [records] = await db.query('SELECT pid, course, grade, name, updated AS lastUpdated FROM grades');
+
+    res.send({
+        message: "it worked",
+        records
+    })
 })
 
 app.listen(PORT, () => {
