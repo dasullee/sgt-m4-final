@@ -107,6 +107,33 @@ app.patch('/api/grades/:record_pid', async (req, res, next) => {
     }
 })
 
+app.delete('/api/grades/:record_pid', async (req, res, next) => {
+    try{
+        const {record_pid} = req.params;
+        const [check] = await db.query("SELECT * FROM grades WHERE pid=?", [record_pid]);
+        if(check.length < 1){
+            res.send({
+                code: 404,
+                errors: [`No record found with an ID of: ${record_pid}`],
+                message: "Bad DELETE Request"
+
+            })
+        }
+        const [record] = await db.query('DELETE FROM grades WHERE pid=?', [record_pid]);
+        if(record.affectedRows > 0){
+            res.send({
+                message: `Successfully deleted grade record: ${record_pid}`,
+                deletedPid: record_pid
+            })
+        }
+    }
+    catch(err){
+        res.send({
+            message: "Something went wrong."
+        })
+    }
+})
+
 app.listen(PORT, () => {
     console.log('Server listening at localhost:' + PORT);
 });
