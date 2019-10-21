@@ -56,10 +56,56 @@ app.post('/api/grades', async (req, res, next) => {
     }
     catch(err){
         res.send({
-            message: "One of course, grade, or name incorrect!"
+            message: "Something went wrong."
         })
     }
 });
+
+app.patch('/api/grades/:record_pid', async (req, res, next) => {
+    try{
+        const {record_pid} = req.params;
+        const errors = [];
+        const {course, grade, name} = req.body;
+        const updateCat = {};
+        if(grade){updateCat["grade"] = grade}
+        if(course){updateCat["course"] = course}
+        if(name){updateCat["name"] = name}
+        if(!grade && !course && !name){
+            errors.push("One of course grade, course name, or student name is required to update.");
+        }
+        if(grade && (grade < 0 || grade > 100)){
+            errors.push("The range for a possible grade is between 0 and 100, inclusive. Please try again.");
+        }
+        const [check] = await db.query("SELECT * FROM grades WHERE pid=?", [record_pid]);
+        if(check.length < 1){
+            errors.push(`No record found with an ID of: ${record_pid}`)
+        }
+        if(errors.length > 0){
+            res.status(422).send({
+                code: 422,
+                errors,
+                message: "Bad PATCH Request"
+            });
+        } else{
+            let querystatement = 'UPDATE grades SET '
+            for(var key in updateCat){
+                querystatement += key + '=' + "'" + updateCat[key] + "'" + ' '
+            }
+            querystatement += 'WHERE pid=?'
+            const [result] = await db.query(querystatement, [record_pid]);
+            const [record] = await db.query('SELECT pid, course, grade, name, updated AS lastUpdated FROM grades WHERE pid=?', [record_pid]);
+            res.send({
+                message: "New student grade record updated successfully",
+                record
+            })
+        }
+
+    } catch(err){
+        res.send({
+            message: "Something went wrong."
+        })
+    }
+})
 
 app.listen(PORT, () => {
     console.log('Server listening at localhost:' + PORT);
