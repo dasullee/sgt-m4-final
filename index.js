@@ -23,9 +23,7 @@ app.get('/api/grades', async (req, res) => {
     })
 });
 
-app.post('/api/grades', async (req, res, next) => {
-    // console.log(req.body);
-    
+app.post('/api/grades', async (req, res, next) => {    
     try{
         const errors = [];
         const {course, grade, name} = req.body;
