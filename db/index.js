@@ -6,3 +6,4 @@ const pool = mysql.createPool(dbConfig);
 const db = pool.promise();
 
 module.exports = db;
+
